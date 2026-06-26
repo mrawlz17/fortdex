@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Fortnite Sprite Tracker</title>
+  <meta name="theme-color" content="#111827" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" />
+  <style>
+    :root{--bg:#0b1020;--panel:#121a2f;--panel2:#18223b;--text:#eef4ff;--muted:#9aa8c1;--line:#283654;--accent:#7dd3fc;--good:#86efac;--bad:#fca5a5;--warn:#fde68a}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#101827 45%,#0b1020);color:var(--text);min-height:100svh}
+    header{position:sticky;top:0;z-index:5;background:rgba(11,16,32,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 14px 10px}
+    .wrap{max-width:980px;margin:0 auto}.top{display:flex;gap:12px;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#7dd3fc,#a78bfa);display:grid;place-items:center;font-weight:900;color:#07111f}.title{font-size:20px;font-weight:850;letter-spacing:.2px}.sub{font-size:12px;color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}.stat b{font-size:18px}.stat span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+    main{padding:14px}.controls{display:grid;gap:10px;margin-bottom:12px}.search{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-size:16px}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:2px}.chip,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:9px 12px;font-weight:700;white-space:nowrap}.chip.active{background:var(--accent);color:#07111f;border-color:transparent}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.card{background:rgba(18,26,47,.94);border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;gap:10px}.cardTop{display:flex;gap:10px;align-items:center}.orb{width:42px;height:42px;border-radius:14px;background:radial-gradient(circle at 30% 30%,#fff8,transparent 30%),linear-gradient(135deg,#38bdf8,#7c3aed);display:grid;place-items:center;font-weight:900;color:white;flex:0 0 auto}.name{font-weight:850}.meta{font-size:12px;color:var(--muted)}.toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toggle{padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:800}.toggle.on.have{background:rgba(134,239,172,.16);border-color:rgba(134,239,172,.55);color:var(--good)}.toggle.on.master{background:rgba(125,211,252,.17);border-color:rgba(125,211,252,.55);color:var(--accent)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.small{font-size:12px;color:var(--muted);line-height:1.35}.danger{color:var(--bad)} textarea{width:100%;min-height:110px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px}.hidden{display:none!important}@media(max-width:560px){.stats{grid-template-columns:1fr 1fr 1fr}.stat{padding:8px}.stat b{font-size:16px}.title{font-size:18px}}
+  </style>
+</head>
+<body>
+<header><div class="wrap"><div class="top"><div class="brand"><div class="logo">FS</div><div><div class="title">Fortnite Sprite Tracker</div><div class="sub">61 released sprites • local save • PWA-ready</div></div></div></div><div class="stats"><div class="stat"><b id="ownedCount">0/61</b><span>Collected</span></div><div class="stat"><b id="masteredCount">0/61</b><span>Mastered</span></div><div class="stat"><b id="needCount">61</b><span>Still needed</span></div></div></div></header>
+<main><div class="wrap"><div class="controls"><input id="search" class="search" placeholder="Search sprites..." autocomplete="off" /><div class="chips" id="filters"></div></div><div class="actions"><button class="btn" id="exportBtn">Export Backup</button><button class="btn" id="importBtn">Import Backup</button><button class="btn danger" id="resetBtn">Reset</button></div><div id="importBox" class="hidden"><p class="small">Paste exported backup JSON below, then tap Import.</p><textarea id="importText"></textarea><div class="actions"><button class="btn" id="doImport">Import</button><button class="btn" id="cancelImport">Cancel</button></div></div><section class="grid" id="grid"></section><p class="small">Data saves only on this device/browser. Source list based on Fortnite.GG sprites page showing 61 released sprites as of June 26, 2026.</p></div></main>
+<script>
+const SPRITES = [
+['Water Sprite','Base','Rare'],['Gold Water Sprite','Gold','Special'],['Gummy Water Sprite','Candy','Special'],['Galaxy Water Sprite','Galaxy','Special'],
+['Earth Sprite','Base','Rare'],['Gold Earth Sprite','Gold','Special'],['Gummy Earth Sprite','Candy','Special'],['Galaxy Earth Sprite','Galaxy','Special'],
+['Fire Sprite','Base','Rare'],['Gold Fire Sprite','Gold','Special'],['Gummy Fire Sprite','Candy','Special'],['Galaxy Fire Sprite','Galaxy','Special'],
+['Duck Sprite','Base','Epic'],['Gold Duck Sprite','Gold','Special'],['Gummy Duck Sprite','Candy','Special'],['Galaxy Duck Sprite','Galaxy','Special'],
+['Ghost Sprite','Base','Epic'],['Gold Ghost Sprite','Gold','Special'],['Gummy Ghost Sprite','Candy','Special'],['Galaxy Ghost Sprite','Galaxy','Special'],
+['Dream Sprite','Base','Legendary'],['Gold Dream Sprite','Gold','Special'],['Gummy Dream Sprite','Candy','Special'],['Galaxy Dream Sprite','Galaxy','Special'],
+['Demon Sprite','Base','Epic'],['Gold Demon Sprite','Gold','Special'],['Gummy Demon Sprite','Candy','Special'],['Galaxy Demon Sprite','Galaxy','Special'],
+['Punk Sprite','Base','Legendary'],['Gold Punk Sprite','Gold','Special'],['Gummy Punk Sprite','Candy','Special'],['Galaxy Punk Sprite','Galaxy','Special'],
+['King Sprite','Base','Epic'],['Gold King Sprite','Gold','Special'],['Gummy King Sprite','Candy','Special'],['Galaxy King Sprite','Galaxy','Special'],
+['Burnt Peanut','Base','Mythic'],
+['Zero Point Sprite','Base','Mythic'],['Gold Zero Point Sprite','Gold','Special'],['Gummy Zero Point Sprite','Candy','Special'],['Galaxy Zero Point Sprite','Galaxy','Special'],
+['Fishy Sprite','Base','Rare'],['Gold Fishy Sprite','Gold','Special'],['Gummy Fishy Sprite','Candy','Special'],['Galaxy Fishy Sprite','Galaxy','Special'],
+['Striker Sprite','Base','Epic'],['Gold Striker Sprite','Gold','Special'],['Gummy Striker Sprite','Candy','Special'],['Galaxy Striker Sprite','Galaxy','Special'],
+['Aura Sprite','Base','Epic'],['Gold Aura Sprite','Gold','Special'],['Gummy Aura Sprite','Candy','Special'],['Galaxy Aura Sprite','Galaxy','Special'],
+['Boss Sprite','Base','Legendary'],['Gold Boss Sprite','Gold','Special'],['Gummy Boss Sprite','Candy','Special'],['Galaxy Boss Sprite','Galaxy','Special'],
+['Grim Sprite','Base','Mythic'],['Gold Grim Sprite','Gold','Special'],['Gummy Grim Sprite','Candy','Special'],['Galaxy Grim Sprite','Galaxy','Special']
+].map(([name,variant,rarity],i)=>({id:name.toLowerCase().replace(/[^a-z0-9]+/g,'-'),name,variant,rarity,index:i+1}));
+const KEY='fortniteSpriteTracker.v2'; let state=JSON.parse(localStorage.getItem(KEY)||'{}'); let filter='all';
+const filters=[['all','All'],['need','Need'],['owned','Owned'],['unmastered','Unmastered'],['mastered','Mastered'],['base','Base'],['special','Special']];
+function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+function row(s){const st=state[s.id]||{}; return {...s,have:!!st.have,mastered:!!st.mastered};}
+function matches(s){const q=document.getElementById('search').value.toLowerCase().trim(); if(q && !(s.name.toLowerCase().includes(q)||s.variant.toLowerCase().includes(q)||s.rarity.toLowerCase().includes(q))) return false; if(filter==='need')return !s.have; if(filter==='owned')return s.have; if(filter==='mastered')return s.mastered; if(filter==='unmastered')return !s.mastered; if(filter==='base')return s.variant==='Base'; if(filter==='special')return s.rarity==='Special'; return true;}
+function renderFilters(){document.getElementById('filters').innerHTML=filters.map(([id,label])=>`<button class="chip ${filter===id?'active':''}" data-filter="${id}">${label}</button>`).join(''); document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;render();});}
+function render(){renderFilters(); const all=SPRITES.map(row); const owned=all.filter(s=>s.have).length, mastered=all.filter(s=>s.mastered).length; ownedCount.textContent=`${owned}/${all.length}`; masteredCount.textContent=`${mastered}/${all.length}`; needCount.textContent=all.length-owned; const shown=all.filter(matches); grid.innerHTML=shown.map(s=>`<article class="card"><div class="cardTop"><div class="orb">${s.name[0]}</div><div><div class="name">${s.name}</div><div class="meta">#${s.index} • ${s.variant} • ${s.rarity}</div></div></div><div class="toggles"><button class="toggle have ${s.have?'on':''}" data-id="${s.id}" data-field="have">${s.have?'Have':'Need'}</button><button class="toggle master ${s.mastered?'on':''}" data-id="${s.id}" data-field="mastered">${s.mastered?'Mastered':'Not mastered'}</button></div></article>`).join('') || '<p class="small">No sprites match that filter.</p>'; document.querySelectorAll('.toggle').forEach(b=>b.onclick=()=>{state[b.dataset.id]=state[b.dataset.id]||{}; state[b.dataset.id][b.dataset.field]=!state[b.dataset.id][b.dataset.field]; save(); render();});}
+search.oninput=render; exportBtn.onclick=async()=>{const data=JSON.stringify({version:2,exportedAt:new Date().toISOString(),state},null,2); try{await navigator.clipboard.writeText(data); alert('Backup copied to clipboard.');}catch(e){prompt('Copy backup JSON:',data)}}; importBtn.onclick=()=>importBox.classList.remove('hidden'); cancelImport.onclick=()=>importBox.classList.add('hidden'); doImport.onclick=()=>{try{const data=JSON.parse(importText.value); state=data.state||data; save(); importBox.classList.add('hidden'); render(); alert('Imported.');}catch(e){alert('Import failed. Paste the exported JSON.');}}; resetBtn.onclick=()=>{if(confirm('Reset all sprite tracking on this device?')){state={};save();render();}};
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});} render();
+</script>
+</body>
+</html>
