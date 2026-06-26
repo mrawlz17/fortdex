@@ -1,0 +1,2 @@
+# fortdex
+Fortnite Collection Tracker
